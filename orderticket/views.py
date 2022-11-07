@@ -626,28 +626,21 @@ def equity(request):
     putCrossed_even = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=False).filter(strike="Put Crossed").order_by('-time')
     gain = LiveSegment.objects.filter(segment__in=["above"]).order_by('-change_perc')
     loss = LiveSegment.objects.filter(segment__in=["below"]).order_by('change_perc')
-    calleven = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=False,change_perc__gte = 3).filter(strike="Call 1 percent").order_by('section')  
-    callodd = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=True,change_perc__gte = 3).filter(strike="Call 1 percent").order_by('section') 
-    puteven = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=False,change_perc__lte = -3).filter(strike="Put 1 percent").order_by('section')  
-    putodd = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=True,change_perc__lte = -3).filter(strike="Put 1 percent").order_by('section') 
+    callCrossed_odd = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=True).filter(strike="Call Crossed",section__lte = 10).order_by('-time')
+    putCrossed_odd = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=True).filter(strike="Put Crossed",section__lte = 10).order_by('-time')
+    callCrossed_even = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=False).filter(strike="Call Crossed",section__lte = 10).order_by('-time')
+    putCrossed_even = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=False).filter(strike="Put Crossed",section__lte = 10).order_by('-time')
+    gain = LiveSegment.objects.filter(segment__in=["above"]).order_by('-change_perc')
+    loss = LiveSegment.objects.filter(segment__in=["below"]).order_by('change_perc')
+    calleven = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=False,change_perc__gte = 3).filter(strike="Call 1 percent",section__lte = 10).order_by('section')  
+    callodd = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=True,change_perc__gte = 3).filter(strike="Call 1 percent",section__lte = 10).order_by('section') 
+    puteven = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=False,change_perc__lte = -3).filter(strike="Put 1 percent",section__lte = 10).order_by('section')  
+    putodd = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=True,change_perc__lte = -3).filter(strike="Put 1 percent",section__lte = 10).order_by('section') 
 
-    calleven_two = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=False,change_perc__gte = 2).filter(strike="Call 1 percent").order_by('section')  
-    callodd_two = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=True,change_perc__gte = 2).filter(strike="Call 1 percent").order_by('section') 
-    puteven_two = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=False,change_perc__lte = -2).filter(strike="Put 1 percent").order_by('section')  
-    putodd_two = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=True,change_perc__lte = -2).filter(strike="Put 1 percent").order_by('section') 
-
-
-    call_result_odd_count =  len(callodd) + len(callCrossed_odd)
-    call_result_even_count = len(calleven) + len(callCrossed_even)
-    put_result_odd_count =  len(putodd) + len(putCrossed_odd)
-    put_result_even_count =  len(puteven) + len(putCrossed_even)
-
-    print(callodd)
-    print(calleven)
-    callcrossedeven = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=False).filter(strike="Call Crossed")
-    putcrossedeven = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=False).filter(strike="Put Crossed")
-    callcrossedodd = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=True).filter(strike="Call Crossed")
-    putcrossedodd = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=True).filter(strike="Put Crossed")
+    calleven_two = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=False,change_perc__gte = 2).filter(strike="Call 1 percent",section__lte = 10).order_by('section')  
+    callodd_two = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=True,change_perc__gte = 2).filter(strike="Call 1 percent",section__lte = 10).order_by('section') 
+    puteven_two = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=False,change_perc__lte = -2).filter(strike="Put 1 percent",section__lte = 10).order_by('section')  
+    putodd_two = LiveEquityResult.objects.annotate(odd=F('section') % 2).filter(odd=True,change_perc__lte = -2).filter(strike="Put 1 percent",section__lte = 10).order_by('section') 
 
     current_time = LiveSegment.objects.order_by('time')[:1]
     equity_timing = current_time[0].time
